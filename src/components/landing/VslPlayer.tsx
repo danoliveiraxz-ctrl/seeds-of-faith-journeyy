@@ -57,8 +57,7 @@ export function VslPlayer() {
           preload="metadata"
           className="absolute inset-0 size-full"
           aria-label="Apresentação do Sementes de Fé"
-          onPlay={() => track("VideoPlay", { content_name: "VSL Sementes de Fé" })}
-          onEnded={() => track("VideoComplete", { content_name: "VSL Sementes de Fé" })}
+          onPlay={() => track("ViewContent", { content_name: "VSL Sementes de Fé — play" })}
         />
       ) : visible ? (
         <iframe
