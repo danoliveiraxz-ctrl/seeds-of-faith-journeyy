@@ -431,16 +431,16 @@ function LandingPage() {
               ))}
             </div>
           ) : (
-            <figure className="mx-auto mt-8 max-w-3xl">
+            <figure className="mx-auto mt-7 -mx-5 max-w-3xl sm:mx-auto sm:mt-8">
               <img
                 src={provaSocialAsset.url}
                 alt="Depoimentos demonstrativos de leitores sobre o e-book Sementes de Fé"
                 width={1536}
                 height={1024}
                 loading="lazy"
-                className="w-full rounded-2xl border border-gold/40 shadow-[var(--shadow-soft)]"
+                className="w-full border-y border-gold/40 shadow-[var(--shadow-soft)] sm:rounded-2xl sm:border"
               />
-              <figcaption className="mt-3 text-center text-xs text-muted-foreground">
+              <figcaption className="mt-3 px-5 text-center text-xs text-muted-foreground sm:px-0">
                 Depoimentos demonstrativos de leitores.
               </figcaption>
             </figure>
