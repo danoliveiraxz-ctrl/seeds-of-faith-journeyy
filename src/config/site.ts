@@ -1,4 +1,5 @@
 import vslVideoAsset from "@/assets/vsl-video.mp4.asset.json";
+import ebookMockupAsset from "@/assets/ebook-mockup.png.asset.json";
 
 /**
  * Configuração central da landing page.
@@ -11,8 +12,8 @@ export const CHECKOUT_URL = "[INSERIR LINK CAKTO]";
 // VSL hospedada nos assets Lovable. Pode trocar por embed (YouTube/Vimeo/Panda/VTurb) se quiser.
 export const VSL_URL = vslVideoAsset.url;
 
-// [INSERIR MOCKUP REAL] — imagem real do e-book (nenhuma página é inventada)
-export const EBOOK_MOCKUP_URL = "";
+// Mockup real do e-book (capa fornecida pelo proprietário)
+export const EBOOK_MOCKUP_URL = ebookMockupAsset.url;
 
 // Tracking — nenhum ID inventado. Preencher com os IDs reais.
 export const META_PIXEL_ID = "META_PIXEL_ID";

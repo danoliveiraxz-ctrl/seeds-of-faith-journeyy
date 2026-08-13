@@ -21,7 +21,7 @@ export function CheckoutButton({
   const pending = isPlaceholder(CHECKOUT_URL);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    track("InitiateCheckout", { content_name: "Sementes de Fé", value: 19.99, currency: "BRL" });
+    track("InitiateCheckout", { content_name: "Sementes de Fé", value: 27.9, currency: "BRL" });
     if (pending) {
       e.preventDefault();
       return;

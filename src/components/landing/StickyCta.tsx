@@ -22,7 +22,7 @@ export function StickyCta() {
         Quero conhecer o Sementes de Fé
       </CheckoutButton>
       <p className="mt-1.5 text-center text-[0.68rem] text-muted-foreground">
-        R$ 19,99 · pagamento seguro · garantia de 7 dias
+        R$ 27,90 · pagamento seguro · garantia de 7 dias
       </p>
     </div>
   );

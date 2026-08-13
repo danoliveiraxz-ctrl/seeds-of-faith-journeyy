@@ -235,12 +235,13 @@ function LandingPage() {
             {EBOOK_MOCKUP_URL ? (
               <img
                 src={EBOOK_MOCKUP_URL}
-                alt="E-book Sementes de Fé aberto sobre uma mesa"
-                width={900}
-                height={675}
+                alt="Capa do e-book Sementes de Fé"
+                width={1183}
+                height={1345}
                 loading="lazy"
-                className="w-full rounded-3xl shadow-[var(--shadow-lift)]"
+                className="mx-auto w-full max-w-md rounded-3xl shadow-[var(--shadow-lift)]"
               />
+
             ) : (
               <div
                 className="grid place-items-center rounded-3xl border-2 border-dashed border-gold/60 bg-card px-6 text-center"
@@ -472,8 +473,8 @@ function LandingPage() {
             </ul>
             <div className="bg-secondary/70 px-6 py-8 text-center sm:px-8">
               <p className="eyebrow text-terracotta">Hoje, preço promocional de lançamento</p>
-              <p className="mt-2 font-display text-5xl text-primary sm:text-6xl">R$ 19,99</p>
-              <p className="mt-1 text-sm text-muted-foreground">ou 3x de R$ 6,99 no cartão</p>
+              <p className="mt-2 font-display text-5xl text-primary sm:text-6xl">R$ 27,90</p>
+              <p className="mt-1 text-sm text-muted-foreground">ou 3x de R$ 9,90 no cartão</p>
               <div className="mt-6 flex flex-col items-center">
                 <CheckoutButton location="oferta">Quero começar agora</CheckoutButton>
                 <p className="mt-3 text-xs text-muted-foreground sm:text-sm">
@@ -540,7 +541,7 @@ function LandingPage() {
           <div className="mt-7 flex flex-col items-center">
             <CheckoutButton location="cta_final">Quero começar agora</CheckoutButton>
             <p className="mt-3 text-xs opacity-80 sm:text-sm">
-              R$ 19,99 ou 3x de R$ 6,99 · entrega imediata · garantia de 7 dias
+              R$ 27,90 ou 3x de R$ 9,90 · entrega imediata · garantia de 7 dias
             </p>
           </div>
         </div>
