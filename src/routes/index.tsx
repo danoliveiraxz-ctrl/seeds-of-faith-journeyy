@@ -125,7 +125,7 @@ function LandingPage() {
       </section>
 
       {/* 4-5. IDENTIFICAÇÃO + PROBLEMA */}
-      <section className="surface-warm py-14 sm:py-20">
+      <section className="surface-warm py-11 sm:py-20">
         <div className="section-shell grid gap-10 lg:grid-cols-[1.05fr_1fr] lg:items-center">
           <div>
             <p className="eyebrow text-terracotta">Talvez você se reconheça aqui</p>
@@ -170,7 +170,7 @@ function LandingPage() {
       </section>
 
       {/* 6. NOVA POSSIBILIDADE */}
-      <section className="py-14 sm:py-20">
+      <section className="py-11 sm:py-20">
         <div className="section-shell">
           <div className="mx-auto max-w-2xl text-center">
             <p className="eyebrow text-terracotta">Nova possibilidade</p>
@@ -207,7 +207,7 @@ function LandingPage() {
       </section>
 
       {/* 7. APRESENTAÇÃO */}
-      <section className="bg-secondary/60 py-14 sm:py-20">
+      <section className="bg-secondary/60 py-11 sm:py-20">
         <div className="section-shell grid items-center gap-10 lg:grid-cols-2">
           <div className="order-2 lg:order-1">
             <p className="eyebrow text-terracotta">O material</p>
@@ -242,7 +242,6 @@ function LandingPage() {
                 loading="lazy"
                 className="mx-auto w-full max-w-md rounded-3xl shadow-[var(--shadow-lift)]"
               />
-
             ) : (
               <div
                 className="grid place-items-center rounded-3xl border-2 border-dashed border-gold/60 bg-card px-6 text-center"
@@ -262,7 +261,7 @@ function LandingPage() {
       </section>
 
       {/* 8. AS 4 JORNADAS */}
-      <section className="py-14 sm:py-20">
+      <section className="py-11 sm:py-20">
         <div className="section-shell">
           <div className="mx-auto max-w-2xl text-center">
             <p className="eyebrow text-terracotta">O que está dentro</p>
@@ -301,7 +300,7 @@ function LandingPage() {
       </section>
 
       {/* 9. COMO FUNCIONA */}
-      <section className="surface-warm py-14 sm:py-20">
+      <section className="surface-warm py-11 sm:py-20">
         <div className="section-shell">
           <div className="mx-auto max-w-2xl text-center">
             <p className="eyebrow text-terracotta">Como funciona</p>
@@ -326,7 +325,7 @@ function LandingPage() {
       </section>
 
       {/* 10. DEMONSTRAÇÃO */}
-      <section className="py-14 sm:py-20">
+      <section className="py-11 sm:py-20">
         <div className="section-shell max-w-3xl">
           <div className="text-center">
             <p className="eyebrow text-terracotta">Demonstração</p>
@@ -361,7 +360,7 @@ function LandingPage() {
       </section>
 
       {/* 11. BÔNUS */}
-      <section className="surface-deep py-14 sm:py-20">
+      <section className="surface-deep py-11 sm:py-20">
         <div className="section-shell">
           <div className="mx-auto max-w-2xl text-center">
             <p className="eyebrow text-gold">Bônus incluídos</p>
@@ -392,7 +391,7 @@ function LandingPage() {
       </section>
 
       {/* 12. AUTORIA */}
-      <section className="py-14 sm:py-20">
+      <section className="py-11 sm:py-20">
         <div className="section-shell max-w-3xl text-center">
           <p className="eyebrow text-terracotta">Quem criou</p>
           <h2 className="mt-3 text-2xl text-balance sm:text-3xl lg:text-4xl">
@@ -411,7 +410,7 @@ function LandingPage() {
       </section>
 
       {/* 13. PROVA SOCIAL REAL */}
-      <section className="surface-warm py-14 sm:py-20">
+      <section className="surface-warm py-11 sm:py-20">
         <div className="section-shell">
           <div className="mx-auto max-w-2xl text-center">
             <p className="eyebrow text-terracotta">Prova social</p>
@@ -450,7 +449,7 @@ function LandingPage() {
       </section>
 
       {/* 14. OFERTA */}
-      <section id="oferta" className="py-14 sm:py-20">
+      <section id="oferta" className="py-11 sm:py-20">
         <div className="section-shell max-w-3xl">
           <div className="text-center">
             <p className="eyebrow text-terracotta">A oferta</p>
@@ -511,7 +510,7 @@ function LandingPage() {
       </section>
 
       {/* 16. FAQ */}
-      <section className="surface-warm py-14 sm:py-20">
+      <section className="surface-warm py-11 sm:py-20">
         <div className="section-shell max-w-3xl">
           <div className="text-center">
             <p className="eyebrow text-terracotta">Dúvidas frequentes</p>
