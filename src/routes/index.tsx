@@ -431,16 +431,19 @@ function LandingPage() {
               ))}
             </div>
           ) : (
-            <div className="mx-auto mt-8 grid max-w-3xl gap-3 sm:grid-cols-3">
-              {[0, 1, 2].map((i) => (
-                <div
-                  key={i}
-                  className="rounded-2xl border border-dashed border-border bg-card/60 p-6 text-center text-xs text-muted-foreground"
-                >
-                  Depoimentos reais serão adicionados aqui.
-                </div>
-              ))}
-            </div>
+            <figure className="mx-auto mt-8 max-w-3xl">
+              <img
+                src={provaSocialAsset.url}
+                alt="Depoimentos demonstrativos de leitores sobre o e-book Sementes de Fé"
+                width={1536}
+                height={1024}
+                loading="lazy"
+                className="w-full rounded-2xl border border-gold/40 shadow-[var(--shadow-soft)]"
+              />
+              <figcaption className="mt-3 text-center text-xs text-muted-foreground">
+                Depoimentos demonstrativos de leitores.
+              </figcaption>
+            </figure>
           )}
         </div>
       </section>
