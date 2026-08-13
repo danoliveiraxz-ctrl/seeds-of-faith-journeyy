@@ -473,8 +473,8 @@ function LandingPage() {
             </ul>
             <div className="bg-secondary/70 px-6 py-8 text-center sm:px-8">
               <p className="eyebrow text-terracotta">Hoje, preço promocional de lançamento</p>
-              <p className="mt-2 font-display text-5xl text-primary sm:text-6xl">R$ 19,99</p>
-              <p className="mt-1 text-sm text-muted-foreground">ou 3x de R$ 6,99 no cartão</p>
+              <p className="mt-2 font-display text-5xl text-primary sm:text-6xl">R$ 27,90</p>
+              <p className="mt-1 text-sm text-muted-foreground">ou 3x de R$ 9,90 no cartão</p>
               <div className="mt-6 flex flex-col items-center">
                 <CheckoutButton location="oferta">Quero começar agora</CheckoutButton>
                 <p className="mt-3 text-xs text-muted-foreground sm:text-sm">
@@ -541,7 +541,7 @@ function LandingPage() {
           <div className="mt-7 flex flex-col items-center">
             <CheckoutButton location="cta_final">Quero começar agora</CheckoutButton>
             <p className="mt-3 text-xs opacity-80 sm:text-sm">
-              R$ 19,99 ou 3x de R$ 6,99 · entrega imediata · garantia de 7 dias
+              R$ 27,90 ou 3x de R$ 9,90 · entrega imediata · garantia de 7 dias
             </p>
           </div>
         </div>
