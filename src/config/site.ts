@@ -1,4 +1,5 @@
 import vslVideoAsset from "@/assets/vsl-video.mp4.asset.json";
+import ebookMockupAsset from "@/assets/ebook-mockup.png.asset.json";
 
 /**
  * Configuração central da landing page.
