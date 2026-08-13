@@ -4,12 +4,17 @@ import { track } from "@/lib/tracking";
 
 /**
  * Player da VSL: grande, responsivo, sem autoplay com áudio.
- * O iframe só é montado quando o bloco entra em tela (performance no mobile).
+ * O player só é montado quando o bloco entra em tela (performance no mobile).
+ * Suporta vídeo MP4 hospedado nos assets Lovable ou iframes de embed (YouTube/Vimeo/etc.).
  */
 export function VslPlayer() {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const pending = isPlaceholder(VSL_URL);
+  const isHostedVideo =
+    !pending &&
+    (VSL_URL.endsWith(".mp4") ||
+      VSL_URL.includes("/__l5e/assets-v1/"));
 
   useEffect(() => {
     const el = ref.current;
@@ -44,6 +49,17 @@ export function VslPlayer() {
           <p className="text-sm font-semibold sm:text-base">Vídeo de apresentação</p>
           <p className="text-xs opacity-80">[INSERIR URL DA VSL]</p>
         </div>
+      ) : visible && isHostedVideo ? (
+        <video
+          src={VSL_URL}
+          controls
+          playsInline
+          preload="metadata"
+          className="absolute inset-0 size-full"
+          aria-label="Apresentação do Sementes de Fé"
+          onPlay={() => track("VideoPlay", { content_name: "VSL Sementes de Fé" })}
+          onEnded={() => track("VideoComplete", { content_name: "VSL Sementes de Fé" })}
+        />
       ) : visible ? (
         <iframe
           src={VSL_URL}
