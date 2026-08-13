@@ -11,6 +11,7 @@ import { VslPlayer } from "@/components/landing/VslPlayer";
 import { StickyCta } from "@/components/landing/StickyCta";
 import { EBOOK_MOCKUP_URL, PROMO_END_AT, TESTIMONIALS } from "@/config/site";
 import { initTracking, track } from "@/lib/tracking";
+import provaSocialAsset from "@/assets/prova-social.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
