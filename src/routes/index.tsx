@@ -61,7 +61,7 @@ const JOURNEYS = [
   },
 ];
 
-const FAQ = [
+const FAQ: [string, string][] = [
   ["Como vou receber o e-book?", "Após a confirmação da compra, o acesso é enviado por e-mail."],
   ["Para qual idade é indicado?", "Foi pensado principalmente para crianças de 6 a 10 anos."],
   [
