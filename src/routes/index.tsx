@@ -235,12 +235,13 @@ function LandingPage() {
             {EBOOK_MOCKUP_URL ? (
               <img
                 src={EBOOK_MOCKUP_URL}
-                alt="E-book Sementes de Fé aberto sobre uma mesa"
-                width={900}
-                height={675}
+                alt="Capa do e-book Sementes de Fé"
+                width={1183}
+                height={1345}
                 loading="lazy"
-                className="w-full rounded-3xl shadow-[var(--shadow-lift)]"
+                className="mx-auto w-full max-w-md rounded-3xl shadow-[var(--shadow-lift)]"
               />
+
             ) : (
               <div
                 className="grid place-items-center rounded-3xl border-2 border-dashed border-gold/60 bg-card px-6 text-center"
