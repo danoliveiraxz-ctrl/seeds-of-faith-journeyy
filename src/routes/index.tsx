@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { ArrowRight, BadgeCheck, Car, Check, ChevronRight, Gauge, Menu, ShieldCheck, X } from "lucide-react";
+import { useRef, useState, type PointerEvent } from "react";
+import { ArrowRight, BadgeCheck, Car, Check, ChevronLeft, ChevronRight, Gauge, Menu, MoveHorizontal, ShieldCheck, X } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -13,14 +13,103 @@ export const Route = createFileRoute("/")({
 });
 
 const WHATSAPP = "5585999999999";
-const cars = [
-  { name: "Honda Civic Touring", year: "2022", km: "41.000 km", price: "R$ 149.900", tag: "Oferta especial", image: "https://images.unsplash.com/photo-1718903747889-0b4636afa7a4?fm=jpg&ixlib=rb-4.0.3&q=85&w=1200" },
-  { name: "Toyota Corolla XEi", year: "2023", km: "28.500 km", price: "R$ 139.900", tag: "Baixa quilometragem", image: "https://www.web-assets.net/dms-images/Blogs/Toyota-corolla.jpeg" },
-  { name: "Jeep Compass Limited", year: "2022", km: "35.800 km", price: "R$ 142.900", tag: "SUV completo", image: "https://www.jeep.com/content/dam/cross-regional/apac/jeep/en_au/compass/2021/hero-slider-image-safety.jpg.img.1440.jpg" },
+
+const civicFrames = [
+  "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1200&q=85",
+  "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=85",
+  "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=1200&q=85",
+  "https://images.unsplash.com/photo-1494905998402-395d579af36f?auto=format&fit=crop&w=1200&q=85",
+  "https://images.unsplash.com/photo-1504215680853-026ed2a45def?auto=format&fit=crop&w=1200&q=85",
+  "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1200&q=85",
 ];
+
+const corollaFrames = [
+  "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1200&q=85",
+  "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=1200&q=85",
+  "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1200&q=85",
+  "https://images.unsplash.com/photo-1493238792000-8113da705763?auto=format&fit=crop&w=1200&q=85",
+  "https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?auto=format&fit=crop&w=1200&q=85",
+  "https://images.unsplash.com/photo-1605559424843-9e7a4f424b4a?auto=format&fit=crop&w=1200&q=85",
+];
+
+const compassFrames = [
+  "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&w=1200&q=85",
+  "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1200&q=85",
+  "https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?auto=format&fit=crop&w=1200&q=85",
+  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=85",
+  "https://images.unsplash.com/photo-1532581140115-3e355d1ed1de?auto=format&fit=crop&w=1200&q=85",
+  "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1200&q=85",
+];
+
+const cars = [
+  { name: "Honda Civic Touring", year: "2022", km: "41.000 km", price: "R$ 149.900", tag: "Oferta especial", frames: civicFrames },
+  { name: "Toyota Corolla XEi", year: "2023", km: "28.500 km", price: "R$ 139.900", tag: "Baixa quilometragem", frames: corollaFrames },
+  { name: "Jeep Compass Limited", year: "2022", km: "35.800 km", price: "R$ 142.900", tag: "SUV completo", frames: compassFrames },
+];
+
+type Vehicle = (typeof cars)[number];
 
 function whatsapp(message: string) {
   window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
+}
+
+function Vehicle360({ car }: { car: Vehicle }) {
+  const [frame, setFrame] = useState(0);
+  const pointerX = useRef<number | null>(null);
+  const dragDistance = useRef(0);
+
+  const changeFrame = (direction: number) => {
+    setFrame((current) => (current + direction + car.frames.length) % car.frames.length);
+  };
+
+  const startDrag = (event: PointerEvent<HTMLDivElement>) => {
+    pointerX.current = event.clientX;
+    dragDistance.current = 0;
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const drag = (event: PointerEvent<HTMLDivElement>) => {
+    if (pointerX.current === null) return;
+    const movement = event.clientX - pointerX.current;
+    pointerX.current = event.clientX;
+    dragDistance.current += movement;
+
+    if (Math.abs(dragDistance.current) >= 28) {
+      changeFrame(dragDistance.current > 0 ? -1 : 1);
+      dragDistance.current = 0;
+    }
+  };
+
+  const endDrag = () => {
+    pointerX.current = null;
+    dragDistance.current = 0;
+  };
+
+  return (
+    <div
+      className="car-photo car-spin"
+      role="group"
+      aria-label={`Visualização 360 graus do ${car.name}`}
+      onPointerDown={startDrag}
+      onPointerMove={drag}
+      onPointerUp={endDrag}
+      onPointerCancel={endDrag}
+      onKeyDown={(event) => {
+        if (event.key === "ArrowLeft") changeFrame(-1);
+        if (event.key === "ArrowRight") changeFrame(1);
+      }}
+      tabIndex={0}
+    >
+      <img src={car.frames[frame]} alt={`${car.name}, ângulo ${frame + 1} de ${car.frames.length}`} loading="lazy" draggable={false} />
+      <span>{car.tag}</span>
+      <div className="spin-hint"><MoveHorizontal size={15} /> Arraste para girar</div>
+      <div className="spin-controls">
+        <button type="button" aria-label={`Ver ângulo anterior do ${car.name}`} onClick={(event) => { event.stopPropagation(); changeFrame(-1); }}><ChevronLeft size={18} /></button>
+        <output aria-label={`Ângulo ${frame + 1} de ${car.frames.length}`}>{frame + 1}/{car.frames.length}</output>
+        <button type="button" aria-label={`Ver próximo ângulo do ${car.name}`} onClick={(event) => { event.stopPropagation(); changeFrame(1); }}><ChevronRight size={18} /></button>
+      </div>
+    </div>
+  );
 }
 
 function LandingPage() {
@@ -70,12 +159,12 @@ function LandingPage() {
         <div className="auto-shell">
           <div className="section-heading">
             <div><p className="auto-kicker">Destaques do estoque</p><h2>Escolha seu próximo carro</h2></div>
-            <p>Opções selecionadas para diferentes estilos, com procedência e condições que cabem no seu planejamento.</p>
+            <p>Arraste a foto de cada veículo para testar a visualização em 360°.</p>
           </div>
           <div className="car-grid">
             {cars.map((car) => (
               <article className="car-card" key={car.name}>
-                <div className="car-photo"><img src={car.image} alt={car.name} loading="lazy" /><span>{car.tag}</span></div>
+                <Vehicle360 car={car} />
                 <div className="car-body">
                   <h3>{car.name}</h3>
                   <div className="car-meta"><span>{car.year}</span><span>{car.km}</span><span>Automático</span></div>
