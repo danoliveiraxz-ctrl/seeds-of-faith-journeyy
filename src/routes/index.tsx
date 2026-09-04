@@ -1,12 +1,27 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useRef, useState, type PointerEvent } from "react";
-import { ArrowRight, BadgeCheck, Car, Check, ChevronLeft, ChevronRight, Gauge, Menu, MoveHorizontal, ShieldCheck, X } from "lucide-react";
+import { useState } from "react";
+import {
+  ArrowRight,
+  Check,
+  Instagram,
+  Menu,
+  Phone,
+  Ruler,
+  ShieldCheck,
+  Star,
+  Truck,
+  X,
+} from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Drive Motors | Seu próximo carro está aqui" },
-      { name: "description", content: "Seminovos selecionados, financiamento facilitado e atendimento transparente." },
+      { title: "Casa Forma | Móveis que transformam ambientes" },
+      {
+        name: "description",
+        content:
+          "Móveis selecionados para sala, quarto e jantar. Design, conforto e entrega segura.",
+      },
     ],
   }),
   component: LandingPage,
@@ -14,162 +29,205 @@ export const Route = createFileRoute("/")({
 
 const WHATSAPP = "5585999999999";
 
-const civicFrames = [
-  "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1200&q=85",
-  "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=85",
-  "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=1200&q=85",
-  "https://images.unsplash.com/photo-1494905998402-395d579af36f?auto=format&fit=crop&w=1200&q=85",
-  "https://images.unsplash.com/photo-1504215680853-026ed2a45def?auto=format&fit=crop&w=1200&q=85",
-  "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1200&q=85",
+const products = [
+  {
+    name: "Sofá Nuvem 3 Lugares",
+    category: "Sala",
+    price: "R$ 3.490",
+    installment: "10x de R$ 349",
+    image:
+      "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1000&q=85",
+    badge: "Mais vendido",
+  },
+  {
+    name: "Poltrona Aura",
+    category: "Sala",
+    price: "R$ 1.290",
+    installment: "10x de R$ 129",
+    image:
+      "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=1000&q=85",
+    badge: "Novo",
+  },
+  {
+    name: "Mesa Íris 6 Lugares",
+    category: "Jantar",
+    price: "R$ 2.790",
+    installment: "10x de R$ 279",
+    image:
+      "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1000&q=85",
+    badge: "Pronta entrega",
+  },
+  {
+    name: "Cama Serena Queen",
+    category: "Quarto",
+    price: "R$ 2.390",
+    installment: "10x de R$ 239",
+    image:
+      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1000&q=85",
+    badge: "Conforto premium",
+  },
+  {
+    name: "Aparador Linha",
+    category: "Jantar",
+    price: "R$ 1.190",
+    installment: "10x de R$ 119",
+    image:
+      "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=1000&q=85",
+    badge: "Design autoral",
+  },
+  {
+    name: "Mesa de Cabeceira Alba",
+    category: "Quarto",
+    price: "R$ 690",
+    installment: "10x de R$ 69",
+    image:
+      "https://images.unsplash.com/photo-1532372320572-cda25653a694?auto=format&fit=crop&w=1000&q=85",
+    badge: "Últimas unidades",
+  },
 ];
 
-const corollaFrames = [
-  "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1200&q=85",
-  "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=1200&q=85",
-  "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1200&q=85",
-  "https://images.unsplash.com/photo-1493238792000-8113da705763?auto=format&fit=crop&w=1200&q=85",
-  "https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?auto=format&fit=crop&w=1200&q=85",
-  "https://images.unsplash.com/photo-1605559424843-9e7a4f424b4a?auto=format&fit=crop&w=1200&q=85",
-];
+const categories = ["Todos", "Sala", "Jantar", "Quarto"];
 
-const compassFrames = [
-  "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&w=1200&q=85",
-  "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1200&q=85",
-  "https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?auto=format&fit=crop&w=1200&q=85",
-  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=85",
-  "https://images.unsplash.com/photo-1532581140115-3e355d1ed1de?auto=format&fit=crop&w=1200&q=85",
-  "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1200&q=85",
-];
-
-const cars = [
-  { name: "Honda Civic Touring", year: "2022", km: "41.000 km", price: "R$ 149.900", tag: "Oferta especial", frames: civicFrames },
-  { name: "Toyota Corolla XEi", year: "2023", km: "28.500 km", price: "R$ 139.900", tag: "Baixa quilometragem", frames: corollaFrames },
-  { name: "Jeep Compass Limited", year: "2022", km: "35.800 km", price: "R$ 142.900", tag: "SUV completo", frames: compassFrames },
-];
-
-type Vehicle = (typeof cars)[number];
-
-function whatsapp(message: string) {
-  window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
-}
-
-function Vehicle360({ car }: { car: Vehicle }) {
-  const [frame, setFrame] = useState(0);
-  const pointerX = useRef<number | null>(null);
-  const dragDistance = useRef(0);
-
-  const changeFrame = (direction: number) => {
-    setFrame((current) => (current + direction + car.frames.length) % car.frames.length);
-  };
-
-  const startDrag = (event: PointerEvent<HTMLDivElement>) => {
-    pointerX.current = event.clientX;
-    dragDistance.current = 0;
-    event.currentTarget.setPointerCapture(event.pointerId);
-  };
-
-  const drag = (event: PointerEvent<HTMLDivElement>) => {
-    if (pointerX.current === null) return;
-    const movement = event.clientX - pointerX.current;
-    pointerX.current = event.clientX;
-    dragDistance.current += movement;
-
-    if (Math.abs(dragDistance.current) >= 28) {
-      changeFrame(dragDistance.current > 0 ? -1 : 1);
-      dragDistance.current = 0;
-    }
-  };
-
-  const endDrag = () => {
-    pointerX.current = null;
-    dragDistance.current = 0;
-  };
-
-  return (
-    <div
-      className="car-photo car-spin"
-      role="group"
-      aria-label={`Visualização 360 graus do ${car.name}`}
-      onPointerDown={startDrag}
-      onPointerMove={drag}
-      onPointerUp={endDrag}
-      onPointerCancel={endDrag}
-      onKeyDown={(event) => {
-        if (event.key === "ArrowLeft") changeFrame(-1);
-        if (event.key === "ArrowRight") changeFrame(1);
-      }}
-      tabIndex={0}
-    >
-      <img src={car.frames[frame]} alt={`${car.name}, ângulo ${frame + 1} de ${car.frames.length}`} loading="lazy" draggable={false} />
-      <span>{car.tag}</span>
-      <div className="spin-hint"><MoveHorizontal size={15} /> Arraste para girar</div>
-      <div className="spin-controls">
-        <button type="button" aria-label={`Ver ângulo anterior do ${car.name}`} onClick={(event) => { event.stopPropagation(); changeFrame(-1); }}><ChevronLeft size={18} /></button>
-        <output aria-label={`Ângulo ${frame + 1} de ${car.frames.length}`}>{frame + 1}/{car.frames.length}</output>
-        <button type="button" aria-label={`Ver próximo ângulo do ${car.name}`} onClick={(event) => { event.stopPropagation(); changeFrame(1); }}><ChevronRight size={18} /></button>
-      </div>
-    </div>
+function openWhatsApp(message: string) {
+  window.open(
+    `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(message)}`,
+    "_blank",
+    "noopener,noreferrer",
   );
 }
 
 function LandingPage() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [selected, setSelected] = useState("Ainda estou escolhendo");
+  const [category, setCategory] = useState("Todos");
   const [name, setName] = useState("");
+  const [interest, setInterest] = useState("Quero ajuda para escolher");
 
-  function chooseCar(car: string) {
-    setSelected(car);
-    document.getElementById("contato")?.scrollIntoView({ behavior: "smooth" });
-  }
+  const visibleProducts =
+    category === "Todos"
+      ? products
+      : products.filter((product) => product.category === category);
+
+  const chooseProduct = (productName: string) => {
+    setInterest(productName);
+    document.getElementById("orcamento")?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
-    <main className="automotive-site">
-      <header className="site-header">
-        <div className="auto-shell nav-inner">
-          <a className="brand" href="#inicio" aria-label="Drive Motors, início">DRIVE<span>MOTORS</span></a>
-          <nav className={menuOpen ? "nav-links is-open" : "nav-links"} aria-label="Navegação principal">
-            <a href="#estoque" onClick={() => setMenuOpen(false)}>Estoque</a>
-            <a href="#vantagens" onClick={() => setMenuOpen(false)}>Vantagens</a>
-            <a href="#contato" onClick={() => setMenuOpen(false)}>Contato</a>
-            <a className="header-cta" href="#contato" onClick={() => setMenuOpen(false)}>Falar com consultor</a>
+    <main className="furniture-site">
+      <header className="furniture-header">
+        <div className="furniture-shell header-inner">
+          <a className="furniture-brand" href="#inicio" aria-label="Casa Forma, início">
+            CASA<span>FORMA</span>
+          </a>
+
+          <nav
+            className={menuOpen ? "furniture-nav is-open" : "furniture-nav"}
+            aria-label="Navegação principal"
+          >
+            <a href="#colecao" onClick={() => setMenuOpen(false)}>Coleção</a>
+            <a href="#sobre" onClick={() => setMenuOpen(false)}>Nossa essência</a>
+            <a href="#avaliacoes" onClick={() => setMenuOpen(false)}>Avaliações</a>
+            <a className="nav-cta" href="#orcamento" onClick={() => setMenuOpen(false)}>
+              Pedir orçamento
+            </a>
           </nav>
-          <button className="menu-button" onClick={() => setMenuOpen((v) => !v)} aria-label="Abrir menu" aria-expanded={menuOpen}>{menuOpen ? <X /> : <Menu />}</button>
+
+          <button
+            className="furniture-menu"
+            type="button"
+            onClick={() => setMenuOpen((open) => !open)}
+            aria-label="Abrir menu"
+            aria-expanded={menuOpen}
+          >
+            {menuOpen ? <X /> : <Menu />}
+          </button>
         </div>
       </header>
 
-      <section className="auto-hero" id="inicio">
-        <div className="hero-shade" />
-        <div className="auto-shell hero-copy">
-          <p className="auto-eyebrow">Seu novo caminho começa aqui</p>
-          <h1>O carro certo para a sua <em>próxima fase.</em></h1>
-          <p className="hero-sub">Seminovos selecionados, condições facilitadas e atendimento transparente para você comprar com segurança.</p>
-          <div className="hero-actions">
-            <a className="btn btn-red" href="#estoque">Ver veículos <ArrowRight size={18} /></a>
-            <a className="btn btn-outline" href="#contato">Simular financiamento</a>
+      <section className="furniture-hero" id="inicio">
+        <div className="furniture-shell hero-layout">
+          <div className="furniture-hero-copy">
+            <p className="furniture-kicker">Design para viver bem</p>
+            <h1>Sua casa merece contar a sua história.</h1>
+            <p>
+              Móveis que unem beleza, conforto e funcionalidade para transformar
+              cada ambiente em um lugar verdadeiramente seu.
+            </p>
+            <div className="furniture-actions">
+              <a className="furniture-button primary" href="#colecao">
+                Conhecer coleção <ArrowRight size={18} />
+              </a>
+              <button
+                className="furniture-button secondary"
+                type="button"
+                onClick={() => openWhatsApp("Olá! Gostaria de ajuda para escolher meus móveis.")}
+              >
+                Falar com especialista
+              </button>
+            </div>
+            <div className="hero-proof">
+              <span><Check size={16} /> Entrega segura</span>
+              <span><Check size={16} /> 12 meses de garantia</span>
+              <span><Check size={16} /> Até 10x sem juros</span>
+            </div>
           </div>
-          <div className="trust-list">
-            <span><Check size={16} /> Veículos vistoriados</span>
-            <span><Check size={16} /> Financiamento facilitado</span>
-            <span><Check size={16} /> Aceitamos seu usado</span>
+
+          <div className="hero-image">
+            <img
+              src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1500&q=90"
+              alt="Sala contemporânea decorada com móveis em tons naturais"
+            />
+            <div className="hero-note">
+              <strong>Feito para durar</strong>
+              <span>Materiais selecionados e acabamento cuidadoso.</span>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="auto-section" id="estoque">
-        <div className="auto-shell">
-          <div className="section-heading">
-            <div><p className="auto-kicker">Destaques do estoque</p><h2>Escolha seu próximo carro</h2></div>
-            <p>Arraste a foto de cada veículo para testar a visualização em 360°.</p>
+      <section className="furniture-section collection-section" id="colecao">
+        <div className="furniture-shell">
+          <div className="furniture-heading">
+            <div>
+              <p className="furniture-kicker">Escolhas para cada ambiente</p>
+              <h2>Descubra a coleção</h2>
+            </div>
+            <p>
+              Peças versáteis, com linhas atemporais e materiais que deixam a casa
+              mais acolhedora.
+            </p>
           </div>
-          <div className="car-grid">
-            {cars.map((car) => (
-              <article className="car-card" key={car.name}>
-                <Vehicle360 car={car} />
-                <div className="car-body">
-                  <h3>{car.name}</h3>
-                  <div className="car-meta"><span>{car.year}</span><span>{car.km}</span><span>Automático</span></div>
-                  <div className="car-price"><small>A partir de</small><strong>{car.price}</strong></div>
-                  <button onClick={() => chooseCar(car.name)}>Tenho interesse <ChevronRight size={17} /></button>
+
+          <div className="category-filter" aria-label="Filtrar produtos por ambiente">
+            {categories.map((item) => (
+              <button
+                type="button"
+                key={item}
+                className={category === item ? "active" : ""}
+                onClick={() => setCategory(item)}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+
+          <div className="product-grid">
+            {visibleProducts.map((product) => (
+              <article className="product-card" key={product.name}>
+                <div className="product-image">
+                  <img src={product.image} alt={product.name} loading="lazy" />
+                  <span>{product.badge}</span>
+                </div>
+                <div className="product-info">
+                  <p>{product.category}</p>
+                  <h3>{product.name}</h3>
+                  <div className="product-price">
+                    <strong>{product.price}</strong>
+                    <small>{product.installment} sem juros</small>
+                  </div>
+                  <button type="button" onClick={() => chooseProduct(product.name)}>
+                    Quero este móvel <ArrowRight size={17} />
+                  </button>
                 </div>
               </article>
             ))}
@@ -177,41 +235,131 @@ function LandingPage() {
         </div>
       </section>
 
-      <section className="auto-section benefits-section" id="vantagens">
-        <div className="auto-shell benefits-grid">
-          <div>
-            <p className="auto-kicker">Compra sem complicação</p>
-            <h2>Confiança em cada detalhe</h2>
-            <p className="muted-copy">Da escolha do modelo à entrega das chaves, você conta com atendimento próximo e informações claras.</p>
-            <div className="stats-grid">
-              <div><strong>100%</strong><span>Veículos vistoriados</span></div><div><strong>48x</strong><span>Opções de financiamento</span></div>
-              <div><strong>+500</strong><span>Clientes atendidos</span></div><div><strong>5★</strong><span>Atendimento personalizado</span></div>
-            </div>
+      <section className="furniture-section essence-section" id="sobre">
+        <div className="furniture-shell essence-grid">
+          <div className="essence-image">
+            <img
+              src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1200&q=85"
+              alt="Ambiente elegante com móveis de madeira e tons neutros"
+              loading="lazy"
+            />
           </div>
-          <div className="benefit-cards">
-            <article><ShieldCheck /><div><h3>Procedência garantida</h3><p>Histórico verificado e documentação em dia.</p></div></article>
-            <article><Car /><div><h3>Seu usado na troca</h3><p>Avaliação justa para facilitar o seu negócio.</p></div></article>
-            <article><Gauge /><div><h3>Crédito facilitado</h3><p>Simulação rápida com condições competitivas.</p></div></article>
-            <article><BadgeCheck /><div><h3>Pós-venda de verdade</h3><p>Suporte mesmo depois da entrega das chaves.</p></div></article>
+          <div className="essence-copy">
+            <p className="furniture-kicker">Nossa essência</p>
+            <h2>Design bonito. Rotina mais leve.</h2>
+            <p>
+              Acreditamos que um bom móvel vai além da aparência. Ele organiza,
+              acolhe e acompanha os momentos mais importantes da vida.
+            </p>
+            <div className="feature-list">
+              <article><Ruler /><div><h3>Medidas que funcionam</h3><p>Orientação para escolher peças proporcionais ao seu espaço.</p></div></article>
+              <article><ShieldCheck /><div><h3>Compra protegida</h3><p>Garantia e suporte antes, durante e depois da entrega.</p></div></article>
+              <article><Truck /><div><h3>Entrega cuidadosa</h3><p>Acompanhamento do pedido até chegar à sua casa.</p></div></article>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="contact-section" id="contato">
-        <div className="auto-shell contact-grid">
-          <div><p className="auto-eyebrow">Vamos encontrar o seu?</p><h2>Receba uma proposta personalizada</h2><p>Preencha os dados e fale agora com um consultor pelo WhatsApp.</p></div>
-          <form onSubmit={(e) => { e.preventDefault(); whatsapp(`Olá! Meu nome é ${name}. Tenho interesse em ${selected} e gostaria de receber uma proposta.`); }}>
-            <label>Seu nome<input required value={name} onChange={(e) => setName(e.target.value)} placeholder="Como podemos te chamar?" /></label>
-            <label>WhatsApp<input required inputMode="tel" placeholder="(85) 99999-9999" /></label>
-            <label className="full-field">Veículo de interesse<select value={selected} onChange={(e) => setSelected(e.target.value)}><option>Ainda estou escolhendo</option>{cars.map((car) => <option key={car.name}>{car.name}</option>)}</select></label>
-            <button className="full-field" type="submit">Quero falar com um consultor <ArrowRight size={18} /></button>
-            <small className="full-field">Seus dados serão usados apenas para este atendimento.</small>
+      <section className="furniture-section reviews-section" id="avaliacoes">
+        <div className="furniture-shell">
+          <div className="furniture-heading centered">
+            <div>
+              <p className="furniture-kicker">Casas transformadas</p>
+              <h2>Quem comprou, recomenda</h2>
+            </div>
+          </div>
+          <div className="review-grid">
+            {[
+              ["O sofá mudou completamente a sala. É confortável, bonito e chegou antes do prazo.", "Mariana S."],
+              ["Recebi orientação pelo WhatsApp e consegui escolher a mesa certa para meu apartamento.", "Felipe A."],
+              ["Acabamento impecável e atendimento muito atencioso do pedido até a montagem.", "Carla M."],
+            ].map(([text, author]) => (
+              <article key={author}>
+                <div className="stars" aria-label="5 estrelas">
+                  {Array.from({ length: 5 }).map((_, index) => <Star key={index} size={16} fill="currentColor" />)}
+                </div>
+                <p>“{text}”</p>
+                <strong>{author}</strong>
+                <span>Cliente Casa Forma</span>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="budget-section" id="orcamento">
+        <div className="furniture-shell budget-grid">
+          <div>
+            <p className="furniture-kicker">Atendimento personalizado</p>
+            <h2>Vamos transformar seu ambiente?</h2>
+            <p>
+              Conte o que você procura e receba opções, medidas e condições
+              diretamente pelo WhatsApp.
+            </p>
+            <a href="tel:+5585999999999"><Phone size={18} /> (85) 99999-9999</a>
+          </div>
+
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              openWhatsApp(
+                `Olá! Meu nome é ${name}. Tenho interesse em: ${interest}. Gostaria de receber um orçamento.`,
+              );
+            }}
+          >
+            <label>
+              Seu nome
+              <input
+                required
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                placeholder="Como podemos te chamar?"
+              />
+            </label>
+            <label>
+              Seu WhatsApp
+              <input required inputMode="tel" placeholder="(85) 99999-9999" />
+            </label>
+            <label className="wide-field">
+              O que você procura?
+              <select value={interest} onChange={(event) => setInterest(event.target.value)}>
+                <option>Quero ajuda para escolher</option>
+                {products.map((product) => <option key={product.name}>{product.name}</option>)}
+              </select>
+            </label>
+            <button className="wide-field" type="submit">
+              Receber orçamento no WhatsApp <ArrowRight size={18} />
+            </button>
           </form>
         </div>
       </section>
 
-      <footer className="auto-footer"><div className="auto-shell"><a className="brand" href="#inicio">DRIVE<span>MOTORS</span></a><p>© {new Date().getFullYear()} Drive Motors. Todos os direitos reservados.</p><p>Seg–Sáb · 08h às 18h</p></div></footer>
-      <button className="whatsapp-float" onClick={() => whatsapp("Olá! Gostaria de conhecer os veículos disponíveis.")} aria-label="Falar pelo WhatsApp">✆</button>
+      <footer className="furniture-footer">
+        <div className="furniture-shell footer-content">
+          <div>
+            <a className="furniture-brand" href="#inicio">CASA<span>FORMA</span></a>
+            <p>Móveis para uma casa com mais beleza, conforto e significado.</p>
+          </div>
+          <div>
+            <strong>Atendimento</strong>
+            <p>Segunda a sábado · 8h às 18h</p>
+            <p>Fortaleza, Ceará</p>
+          </div>
+          <a href="#" aria-label="Instagram da Casa Forma"><Instagram /> Instagram</a>
+        </div>
+        <div className="furniture-shell footer-bottom">
+          © {new Date().getFullYear()} Casa Forma. Todos os direitos reservados.
+        </div>
+      </footer>
+
+      <button
+        className="furniture-whatsapp"
+        type="button"
+        onClick={() => openWhatsApp("Olá! Gostaria de conhecer os móveis disponíveis.")}
+        aria-label="Falar com a Casa Forma pelo WhatsApp"
+      >
+        <Phone />
+      </button>
     </main>
   );
 }
