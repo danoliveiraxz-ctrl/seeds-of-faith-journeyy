@@ -34,23 +34,27 @@ Deno.serve(async (req: Request) => {
     const body = JSON.parse(raw);
     const eventDate = dates[body?.session];
     const quantity = body?.quantity;
-    if (!eventDate || !Number.isInteger(quantity) || quantity < 1 || quantity > 10) {
+    const sector = body?.sector ?? "Pista";
+    const ticketType = body?.ticketType ?? "inteira";
+    if (!eventDate || !Number.isInteger(quantity) || quantity < 1 || quantity > 1 ||
+      !["Pista", "Arquibancada"].includes(sector) ||
+      !["inteira", "meia"].includes(ticketType)) {
       return send({ error: "Invalid selection" }, 400);
     }
     const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
     const { data: order, error: orderError } = await db.rpc("create_sigilopay_order", {
-      p_date: eventDate, p_quantity: quantity,
+      p_date: eventDate, p_quantity: quantity, p_sector: sector, p_ticket_type: ticketType,
     }).single();
     if (orderError || !order) return send({ error: "Unable to create order in database" }, 503);
 
     const checkoutBody = {
       product: {
         externalId: order.external_id,
-        name: "BTS World Tour Arirang - " + quantity + " ingresso" + (quantity === 1 ? "" : "s"),
+        name: "BTS World Tour Arirang - " + sector + " - " + (ticketType === "meia" ? "Meia-entrada" : "Inteira"),
         offer: {
-          name: "Sessão " + body.session + " de outubro de 2026",
+          name: "Sessão " + body.session + " de outubro de 2026 · " + sector + " · " + (ticketType === "meia" ? "Meia-entrada" : "Inteira"),
           // Sigilo Pay validates this field in BRL; the order remains stored in cents.
           price: order.amount_cents / 100,
           offerType: "NATIONAL",
