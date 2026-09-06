@@ -9,4 +9,6 @@ Configuration:
 4. Keep SIGILOPAY_ENABLED=false until testing is finished, then set it to true.
 5. The frontend posts session and quantity to the create-checkout Edge Function and redirects to checkoutUrl.
 
-The supplied documentation contains no payment confirmation or webhook authentication format. The webhook rejects all requests until Sigilo Pay provides event body, transaction reference, signature and secret details.
+The TRANSACTION_CREATED webhook is implemented. Set GATEWAY_WEBHOOK_TOKEN as a Supabase Edge Function secret and configure the same value in Sigilo Pay. The function validates the body and token before storing a minimal transaction record, and transaction ID makes delivery idempotent. It never logs or stores webhook tokens, CPF, CNPJ, address, checkout URL, PIX QR code or tracking data.
+
+TRANSACTION_CREATED confirms that a transaction was created; it does not confirm payment. Keep ticket delivery disabled until Sigilo Pay provides and we implement a payment-status webhook with an authenticated signature or token.
