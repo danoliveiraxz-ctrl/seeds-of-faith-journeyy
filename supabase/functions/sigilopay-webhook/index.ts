@@ -2,89 +2,164 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 
 type PaymentMethod = "CREDIT_CARD" | "PIX" | "BOLETO" | "CRYPTO";
 type TransactionStatus = "COMPLETED" | "FAILED" | "PENDING" | "REFUNDED" | "CHARGED_BACK";
-interface Address { country: string; zipCode: string; state: string; city: string; neighborhood: string; street: string; number: string; complement?: string | null; }
-interface Client { id: string; name: string; email: string; phone: string; cpf: string | null; cnpj: string | null; address: Address | null; }
-interface PixInformation { id: string; qrCode: string; endToEndId: string | null; }
-interface BoletoInformation { transactionId: string; id: string; barcode: string; digitableLine: string; pdfUrl: string; instructions: string; createdAt: string; updatedAt: string; }
-interface Subscription { id: string; identifier: string; cycle: number; startAt: string; intervalType: "DAYS" | "WEEKS" | "MONTHS" | "YEARS"; intervalCount: number; status: "ACTIVE" | "INACTIVE" | "CANCELED"; }
-interface OrderItem { id: string; price: number; product: { id: string; name: string; externalId: string; }; }
-interface Transaction { id: string; identifier?: string; status: TransactionStatus; paymentMethod: PaymentMethod; originalAmount: number; amount: number; commissionAmount?: number | null; originalCurrency: string; currency: string; exchangeRate: number | null; installments: number; createdAt: string; payedAt: string | null; pixInformation?: PixInformation | null; boletoInformation?: BoletoInformation | null; orderItems?: OrderItem[]; }
-interface TrackProps { utm_id?: string; utm_source?: string; utm_medium?: string; utm_campaign?: string; utm_content?: string; utm_term?: string; fbc?: string; fbp?: string; ip?: string; country?: string; user_agent?: string; zip_code?: string; city?: string; state?: string; }
-interface TransactionCreatedPayload { event: "TRANSACTION_CREATED"; token: string; offerCode: string; checkoutUrl: string; client: Client; transaction: Transaction; subscription: Subscription | null; orderItems?: OrderItem[]; trackProps: TrackProps; }
 
-const validStatuses = new Set<TransactionStatus>(["COMPLETED", "FAILED", "PENDING", "REFUNDED", "CHARGED_BACK"]);
+interface OrderItem {
+  id: string;
+  price: number;
+  product: { id: string; name: string; externalId: string };
+}
+
+interface PaidPayload {
+  event: string;
+  token: string;
+  offerCode: string;
+  client: { id: string };
+  transaction: {
+    id: string;
+    status: TransactionStatus;
+    paymentMethod: PaymentMethod;
+    originalAmount: number;
+    amount: number;
+    originalCurrency: string;
+    currency: string;
+    installments: number;
+    createdAt: string;
+    payedAt: string;
+    orderItems?: OrderItem[];
+  };
+  orderItems?: OrderItem[];
+}
+
 const validMethods = new Set<PaymentMethod>(["CREDIT_CARD", "PIX", "BOLETO", "CRYPTO"]);
-const object = (v: unknown): v is Record<string, unknown> => !!v && typeof v === "object" && !Array.isArray(v);
-const text = (v: unknown, max = 512): v is string => typeof v === "string" && v.length > 0 && v.length <= max;
-const number = (v: unknown): v is number => typeof v === "number" && Number.isFinite(v);
-const isoDate = (v: unknown): v is string => text(v, 64) && Number.isFinite(Date.parse(v));
+const isObject = (value: unknown): value is Record<string, unknown> => !!value && typeof value === "object" && !Array.isArray(value);
+const isText = (value: unknown, max = 512): value is string => typeof value === "string" && value.length > 0 && value.length <= max;
+const isNumber = (value: unknown): value is number => typeof value === "number" && Number.isFinite(value);
+const isIsoDate = (value: unknown): value is string => isText(value, 64) && Number.isFinite(Date.parse(value));
 
-async function tokenMatches(value: unknown, expected: string): Promise<boolean> {
-  if (!text(value, 512)) return false;
+async function tokenMatches(received: unknown, expected: string): Promise<boolean> {
+  if (!isText(received, 512)) return false;
   const encoder = new TextEncoder();
   const [left, right] = await Promise.all([
-    crypto.subtle.digest("SHA-256", encoder.encode(value)),
+    crypto.subtle.digest("SHA-256", encoder.encode(received)),
     crypto.subtle.digest("SHA-256", encoder.encode(expected)),
   ]);
-  const a = new Uint8Array(left), b = new Uint8Array(right);
+  const a = new Uint8Array(left);
+  const b = new Uint8Array(right);
   let difference = 0;
   for (let index = 0; index < a.length; index++) difference |= a[index] ^ b[index];
   return difference === 0;
 }
 
-function itemsFrom(payload: Record<string, unknown>): OrderItem[] | null {
-  const fromRoot = Array.isArray(payload.orderItems) ? payload.orderItems : object(payload.transaction) && Array.isArray(payload.transaction.orderItems) ? payload.transaction.orderItems : null;
-  if (!fromRoot || fromRoot.length < 1 || fromRoot.length > 100) return null;
-  const items: OrderItem[] = [];
-  for (const item of fromRoot) {
-    if (!object(item) || !text(item.id) || !number(item.price) || !object(item.product) || !text(item.product.id) || !text(item.product.name) || !text(item.product.externalId)) return null;
-    items.push({ id: item.id, price: item.price, product: { id: item.product.id, name: item.product.name, externalId: item.product.externalId } });
+function getOrderItems(payload: Record<string, unknown>): OrderItem[] | null {
+  const items = Array.isArray(payload.orderItems)
+    ? payload.orderItems
+    : isObject(payload.transaction) && Array.isArray(payload.transaction.orderItems)
+    ? payload.transaction.orderItems
+    : null;
+
+  if (!items || items.length < 1 || items.length > 100) return null;
+  const parsed: OrderItem[] = [];
+
+  for (const item of items) {
+    if (!isObject(item) || !isText(item.id) || !isNumber(item.price) ||
+      !isObject(item.product) || !isText(item.product.id) ||
+      !isText(item.product.name) || !isText(item.product.externalId)) return null;
+
+    parsed.push({
+      id: item.id,
+      price: item.price,
+      product: {
+        id: item.product.id,
+        name: item.product.name,
+        externalId: item.product.externalId,
+      },
+    });
   }
-  return items;
+  return parsed;
 }
 
-function parse(payload: unknown): TransactionCreatedPayload | null {
-  if (!object(payload) || payload.event !== "TRANSACTION_CREATED" || !text(payload.token) || !text(payload.offerCode) || typeof payload.checkoutUrl !== "string" || !object(payload.client) || !object(payload.transaction) || !object(payload.trackProps)) return null;
-  const c = payload.client, t = payload.transaction;
-  if (!text(c.id) || !text(c.name) || !text(c.email) || !text(c.phone) || !(typeof c.cpf === "string" || c.cpf === null) || !(typeof c.cnpj === "string" || c.cnpj === null) || !(object(c.address) || c.address === null)) return null;
-  if (!text(t.id) || !validStatuses.has(t.status as TransactionStatus) || !validMethods.has(t.paymentMethod as PaymentMethod) || !number(t.originalAmount) || !number(t.amount) || !text(t.originalCurrency, 8) || !text(t.currency, 8) || !number(t.installments) || !isoDate(t.createdAt) || !(isoDate(t.payedAt) || t.payedAt === null)) return null;
-  const items = itemsFrom(payload);
-  if (!items) return null;
-  return { event: "TRANSACTION_CREATED", token: payload.token, offerCode: payload.offerCode, checkoutUrl: payload.checkoutUrl, client: c as Client, transaction: { ...(t as Transaction), orderItems: items }, subscription: payload.subscription as Subscription | null, orderItems: items, trackProps: payload.trackProps as TrackProps };
+function parsePaidPayload(input: unknown): PaidPayload | null {
+  if (!isObject(input) || !isText(input.event, 100) || !isText(input.token) ||
+    !isText(input.offerCode) || !isObject(input.client) || !isObject(input.transaction)) return null;
+
+  const client = input.client;
+  const transaction = input.transaction;
+  if (!isText(client.id)) return null;
+
+  // "Transação paga" must carry a completed transaction and its payment time.
+  if (!isText(transaction.id) || transaction.status !== "COMPLETED" ||
+    !validMethods.has(transaction.paymentMethod as PaymentMethod) ||
+    !isNumber(transaction.originalAmount) || !isNumber(transaction.amount) ||
+    !isText(transaction.originalCurrency, 8) || !isText(transaction.currency, 8) ||
+    !isNumber(transaction.installments) || !isIsoDate(transaction.createdAt) ||
+    !isIsoDate(transaction.payedAt)) return null;
+
+  const orderItems = getOrderItems(input);
+  if (!orderItems) return null;
+
+  return {
+    event: input.event,
+    token: input.token,
+    offerCode: input.offerCode,
+    client: { id: client.id },
+    transaction: {
+      id: transaction.id,
+      status: "COMPLETED",
+      paymentMethod: transaction.paymentMethod as PaymentMethod,
+      originalAmount: transaction.originalAmount,
+      amount: transaction.amount,
+      originalCurrency: transaction.originalCurrency,
+      currency: transaction.currency,
+      installments: transaction.installments,
+      createdAt: transaction.createdAt,
+      payedAt: transaction.payedAt,
+      orderItems,
+    },
+    orderItems,
+  };
 }
 
 Deno.serve(async (req: Request) => {
   if (req.method !== "POST") return new Response("Method not allowed", { status: 405 });
+
   try {
     const raw = await req.text();
     if (raw.length > 256000) return Response.json({ error: "Invalid payload" }, { status: 400 });
+
     let input: unknown;
     try { input = JSON.parse(raw); } catch { return Response.json({ error: "Invalid payload" }, { status: 400 }); }
-    if (!object(input) || input.event !== "TRANSACTION_CREATED") return Response.json({ error: "Invalid event" }, { status: 400 });
-    const expected = Deno.env.get("GATEWAY_WEBHOOK_TOKEN");
-    if (!expected || !(await tokenMatches(input.token, expected))) return Response.json({ error: "Unauthorized" }, { status: 401 });
-    const payload = parse(input);
-    if (!payload) return Response.json({ error: "Invalid payload" }, { status: 400 });
+    if (!isObject(input)) return Response.json({ error: "Invalid payload" }, { status: 400 });
+
+    const expectedToken = Deno.env.get("GATEWAY_WEBHOOK_TOKEN");
+    if (!expectedToken || !(await tokenMatches(input.token, expectedToken))) {
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const payload = parsePaidPayload(input);
+    if (!payload) return Response.json({ error: "Payment is not a completed transaction" }, { status: 400 });
+
     const externalId = payload.orderItems![0].product.externalId;
-    const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false, autoRefreshToken: false } });
+    const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+
     const { data: order, error: orderError } = await db
       .from("checkout_orders")
       .select("id, gateway_offer_code, amount_cents")
       .eq("external_id", externalId)
       .maybeSingle();
+
     if (orderError) return Response.json({ error: "Unable to process event" }, { status: 503 });
 
-    // A valid webhook must match the checkout we created. TRANSACTION_CREATED is
-    // recorded only; it never marks an order paid or issues a ticket.
     if (!order || order.gateway_offer_code !== payload.offerCode ||
       payload.transaction.currency !== "BRL" ||
       payload.transaction.amount !== order.amount_cents / 100) {
       return Response.json({ error: "Invalid transaction reference" }, { status: 400 });
     }
 
-    const { error: insertError } = await db.from("sigilopay_transactions").upsert({
+    const { error: transactionError } = await db.from("sigilopay_transactions").upsert({
       transaction_id: payload.transaction.id,
-      order_id: order?.id ?? null,
+      order_id: order.id,
       offer_code: payload.offerCode,
       transaction_status: payload.transaction.status,
       payment_method: payload.transaction.paymentMethod,
@@ -92,9 +167,18 @@ Deno.serve(async (req: Request) => {
       currency: payload.transaction.currency,
       client_id: payload.client.id,
       created_at_provider: payload.transaction.createdAt,
-    }, { onConflict: "transaction_id", ignoreDuplicates: true });
-    if (insertError) return Response.json({ error: "Unable to process event" }, { status: 503 });
-    return Response.json({ accepted: true }, { status: 200 });
+    }, { onConflict: "transaction_id" });
+
+    if (transactionError) return Response.json({ error: "Unable to process event" }, { status: 503 });
+
+    const { error: paidOrderError } = await db.from("checkout_orders").update({
+      status: "paid",
+      updated_at: new Date().toISOString(),
+    }).eq("id", order.id);
+
+    if (paidOrderError) return Response.json({ error: "Unable to process event" }, { status: 503 });
+
+    return Response.json({ accepted: true, paid: true }, { status: 200 });
   } catch {
     return Response.json({ error: "Unable to process event" }, { status: 503 });
   }
