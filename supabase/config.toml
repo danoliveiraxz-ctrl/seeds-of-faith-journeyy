@@ -1,0 +1,4 @@
+[functions.sigilopay-create-checkout]
+verify_jwt = false
+[functions.sigilopay-webhook]
+verify_jwt = false
