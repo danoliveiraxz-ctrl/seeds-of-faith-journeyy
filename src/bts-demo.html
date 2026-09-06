@@ -61,14 +61,19 @@ async function goToPayment(){
     });
     const raw=await response.text();
     let result={};try{result=JSON.parse(raw)}catch{}
-    if(!response.ok||typeof result.checkoutUrl!=='string'||!result.checkoutUrl.startsWith('https://'))throw new Error('checkout');
+    if(!response.ok) {
+      const detail=typeof result.error==='string'?result.error:'Checkout não disponível';
+      throw new Error('Código '+response.status+': '+detail);
+    }
+    if(typeof result.checkoutUrl!=='string'||!result.checkoutUrl.startsWith('https://'))throw new Error('A resposta de pagamento não trouxe um link válido.');
     if(paymentWindow)paymentWindow.location.href=result.checkoutUrl;
     else window.location.href=result.checkoutUrl;
     button.textContent='PAGAMENTO ABERTO ✓';
     status.textContent='O pagamento seguro foi aberto. Caso não apareça, permita pop-ups e tente novamente.';
-  }catch{
+  }catch(error){
     if(paymentWindow&&!paymentWindow.closed)paymentWindow.close();
-    status.textContent='Não conseguimos iniciar o pagamento. Verifique sua conexão e tente novamente.';
+    const message=error instanceof Error?error.message:'Não foi possível iniciar o pagamento.';
+    status.textContent='Não foi possível iniciar o pagamento. '+message;
     button.disabled=false;button.textContent='TENTAR PAGAMENTO NOVAMENTE';paying=false;
   }
 }
