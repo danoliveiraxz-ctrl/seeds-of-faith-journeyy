@@ -26,6 +26,34 @@
 .content>div,.summary,.flow-card{min-width:0}dd,.contact a{overflow-wrap:anywhere}.flow-card .total{flex-wrap:wrap}.stage-heading>div{min-width:0}
 @media(max-width:480px){.nav .tag{font-size:10px;letter-spacing:0;white-space:normal;max-width:120px}.mobile-bar{gap:10px;flex-wrap:wrap}.mobile-bar .cta{flex:1;min-width:130px}.payment-loading{padding:28px 20px;max-height:calc(100dvh - 32px);overflow:auto}.flow{padding-inline:16px}.flow-card{padding:20px}.limit-callout{padding:16px}.choice strong{font-size:18px}}
 @media(prefers-reduced-motion:reduce){.lock-shackle{transition:none}}
+
+/* Secure checkout handoff: branded review screen before the external gateway. */
+#checkout.flow{max-width:760px;padding:28px 20px 80px}
+.checkout-banner-wrap{overflow:hidden;border-radius:18px 18px 0 0;background:#09090b;border:1px solid #26262d;border-bottom:0;position:relative;box-shadow:0 18px 50px #0002}
+.checkout-banner{display:block;width:100%;aspect-ratio:2.98/1;object-fit:cover;object-position:center}
+.checkout-banner-overlay{position:absolute;inset:auto 0 0;padding:26px 24px 18px;background:linear-gradient(0deg,#09090bea 0%,transparent 100%);color:#fff}
+.checkout-banner-overlay strong{font-size:12px;letter-spacing:1.2px;text-transform:uppercase}
+.checkout-banner-overlay span{display:block;margin-top:5px;color:#ffdbe3;font-size:13px}
+#checkout .breadcrumbs{margin:0 0 16px}
+#checkout h2{font-size:34px;margin:0 0 7px}
+#checkout .flow-lead{margin-bottom:22px}
+#checkout .flow-card{margin-top:0;border-radius:0 0 18px 18px;border:1px solid #26262d;background:#111113;color:#fff;box-shadow:0 18px 50px #0002;padding:0;overflow:hidden}
+.checkout-product{display:flex;gap:16px;align-items:center;padding:22px 24px;border-bottom:1px solid #303038;background:linear-gradient(135deg,#17171b,#0e0e10)}
+.checkout-product img{width:82px;height:82px;object-fit:cover;border-radius:10px;border:1px solid #46464e;flex-shrink:0}
+.checkout-product p{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#ff5277;margin:0 0 5px}
+.checkout-product h3{font-size:20px;line-height:1.15;margin:0;letter-spacing:-.4px}
+.checkout-product small{display:block;margin-top:6px;color:#bbbcc4;font-size:13px}
+.stock-notice{display:flex;align-items:flex-start;gap:9px;margin:20px 24px 0;padding:13px 14px;background:#3b0714;border:1px solid #a91c3c;border-radius:9px;color:#ffe9ee;font-size:13px;line-height:1.4}
+.stock-notice b{color:#fff}
+#checkout .flow-card>dl{margin:0;padding:19px 24px 0}
+#checkout .flow-card dl>div{border-bottom:1px solid #29292f;padding-bottom:12px;margin-top:12px}
+#checkout .flow-card dt{color:#b4b4be}
+#checkout .flow-card .total{margin:20px 24px 0;padding:20px 0 0;border-top:1px dashed #4b4b55}
+#checkout .flow-card .total small{color:#b4b4be}
+#checkout .flow-card .cta{margin:22px 24px 0;width:calc(100% - 48px);border-radius:8px;font-size:13px}
+#checkout .flow-card .helper{padding:0 24px 24px;color:#b4b4be}
+.checkout-disclaimer{color:#b4b4be;font-size:11px;line-height:1.45;text-align:center;margin:17px auto 0;max-width:590px}
+@media(max-width:600px){#checkout.flow{padding:20px 14px 100px}#checkout h2{font-size:29px}.checkout-banner-overlay{padding:20px 16px 14px}.checkout-product{padding:18px 16px}.checkout-product img{width:70px;height:70px}.checkout-product h3{font-size:18px}.stock-notice{margin:16px 16px 0}#checkout .flow-card>dl{padding-inline:16px}#checkout .flow-card .total{margin-inline:16px}#checkout .flow-card .cta{margin-inline:16px;width:calc(100% - 32px)}#checkout .flow-card .helper{padding-inline:16px}}
 </style></head>
 <body>
 
@@ -56,7 +84,16 @@
 <aside hidden id="selectionSummary" class="summary ticket-stage" tabindex="-1" aria-label="Resumo da seleção"><div class="summary-head"><h2>Seu pedido</h2><span class="tag">BTS / 2026</span></div><div class="summary-body"><h3 class="summary-show">WORLD TOUR ‘ARIRANG’</h3><p class="summary-caption">São Paulo, Brasil</p><dl><div><dt>Sessão</dt><dd id="summaryDate">28 de outubro</dd></div><div><dt>Formato</dt><dd>Ingresso digital</dd></div><div><dt>Setor</dt><dd id="summarySector">Pista</dd></div><div><dt>Tipo</dt><dd id="summaryType">Inteira</dd></div><div><dt>Valor unitário</dt><dd id="unitPrice">R$ 999,00</dd></div><div><dt>Quantidade</dt><dd id="summaryQty">1 ingresso</dd></div></dl><div class="total"><div>Total<small>Da seleção atual</small></div><strong id="price" aria-live="polite">R$ 999,00</strong></div><button class="cta" id="buy" aria-describedby="unlock">ADQUIRIR INGRESSOS <span aria-hidden="true">→</span></button><p class="helper" id="unlock">Confira suas escolhas antes de seguir para o pagamento.</p><p class="market">Marketplace de ingressos · valores definidos por vendedores parceiros. Confirme a disponibilidade e o setor com nosso atendimento.</p></div></aside></div>
 <div class="mobile-bar" id="mobileBar" hidden><div><small id="mobileQty">1 ingresso · total</small><strong id="mobilePrice">R$ 999,00</strong></div><button class="cta" id="mobileBuy">CONTINUAR →</button></div>
 </section>
-<section class="flow" id="checkout" hidden tabindex="-1"><div class="breadcrumbs"><span>01 / SELEÇÃO ✓</span><span class="active">02 / RESUMO</span></div><h2>Está tudo certo com seu pedido?</h2><p class="flow-lead">Confira sua seleção antes de finalizar.</p><div class="flow-card"><p class="eyebrow">BTS World Tour / 2026</p><h3 class="summary-show">‘ARIRANG’ · São Paulo</h3><dl><div><dt>Sessão</dt><dd id="orderDate"></dd></div><div><dt>Formato</dt><dd>Ingresso digital</dd></div><div><dt>Setor</dt><dd id="orderSector">Pista</dd></div><div><dt>Tipo</dt><dd id="orderType">Inteira</dd></div><div><dt>Valor unitário</dt><dd id="orderUnit"></dd></div><div><dt>Quantidade</dt><dd id="orderQty"></dd></div></dl><div class="total"><span>Total do pedido</span><strong id="orderTotal"></strong></div><button class="cta" id="finish">IR PARA PAGAMENTO SEGURO →</button><p class="helper" id="checkoutStatus">Você será direcionado ao checkout seguro para concluir a compra.</p></div><button class="back" id="back">← Voltar à página inicial</button></section>
+<section class="flow" id="checkout" hidden tabindex="-1">
+<div class="checkout-banner-wrap">
+  <img class="checkout-banner" src="https://mknjyqsgxricieugaftg.supabase.co/storage/v1/object/public/assets/kpop-checkout-banner.png" alt="BTS Arirang 2026">
+  <div class="checkout-banner-overlay"><strong>Kpop Tickets · Compra segura</strong><span>Confira sua seleção antes de seguir ao pagamento.</span></div>
+</div><div class="breadcrumbs"><span>01 / SELEÇÃO ✓</span><span class="active">02 / RESUMO</span></div><h2>Está tudo certo com seu pedido?</h2><p class="flow-lead">Confira sua seleção antes de finalizar.</p><div class="flow-card">
+  <div class="checkout-product">
+    <img src="https://mknjyqsgxricieugaftg.supabase.co/storage/v1/object/public/assets/kpop-product.png" alt="Arte do produto BTS Arirang 2026">
+    <div><p>Kpop Tickets</p><h3>WORLD TOUR ‘ARIRANG’</h3><small>Ingresso digital · São Paulo</small></div>
+  </div>
+  <p class="stock-notice"><span aria-hidden="true">⚠</span><span><b>Últimas unidades para esta sessão.</b><br>Garanta sua seleção enquanto houver disponibilidade.</span></p><p class="eyebrow" style="margin:22px 24px 0">BTS World Tour / 2026</p><h3 class="summary-show" style="margin:0 24px">‘ARIRANG’ · São Paulo</h3><dl><div><dt>Sessão</dt><dd id="orderDate"></dd></div><div><dt>Formato</dt><dd>Ingresso digital</dd></div><div><dt>Setor</dt><dd id="orderSector">Pista</dd></div><div><dt>Tipo</dt><dd id="orderType">Inteira</dd></div><div><dt>Valor unitário</dt><dd id="orderUnit"></dd></div><div><dt>Quantidade</dt><dd id="orderQty"></dd></div></dl><div class="total"><span>Total do pedido</span><strong id="orderTotal"></strong></div><button class="cta" id="finish">IR PARA PAGAMENTO SEGURO →</button><p class="helper" id="checkoutStatus">Você será direcionado ao checkout seguro para concluir a compra.</p></div><button class="back" id="back">← Voltar à página inicial</button><p class="checkout-disclaimer">Somos revendedores especializados em shows e eventos. Sem vínculo oficial com BTS ou com os organizadores do evento.</p></section>
 </main>
 <footer class="footer"><div class="wrap footer-inner"><div><a href="#" class="brand" id="footerBrand">kpop <span>tickets</span></a><p>Uma experiência feita para quem vive a música.</p><p>Somos revendedores especializados em shows e eventos. Sem vínculo oficial com BTS ou com os organizadores do evento.</p></div><div class="contact">Atendimento<a href="mailto:suporte@kpoptickes.com.br">suporte@kpoptickes.com.br</a><a href="tel:+5511987654322">(11) 98765-4322</a></div></div></footer>
 <dialog class="payment-loading" id="paymentLoading" aria-labelledby="loadingTitle"><svg class="payment-lock" viewBox="0 0 72 72" fill="none" stroke="currentColor" stroke-width="4" aria-hidden="true"><path class="lock-shackle" d="M22 34V23a14 14 0 0 1 28 0v11"/><rect x="14" y="34" width="44" height="30" rx="7"/><path d="M36 46v8"/></svg><h2 id="loadingTitle">Carregando compra segura</h2><p id="loadingText" role="status">Preparando seu checkout. Aguarde um instante.</p><progress id="loadingProgress" max="100" value="8" aria-label="Preparação do checkout"></progress><button class="back" id="dismissLoading" hidden>Voltar ao pedido</button></dialog><script>
