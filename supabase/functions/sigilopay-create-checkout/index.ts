@@ -30,12 +30,9 @@ Deno.serve(async (req: Request) => {
   const secretKey = Deno.env.get("SIGILOPAY_SECRET_KEY");
   const enabled = Deno.env.get("SIGILOPAY_ENABLED") === "true";
   if (!enabled || !publicKey || !secretKey) {
-    const missing = [
-      !enabled ? "SIGILOPAY_ENABLED" : "",
-      !publicKey ? "SIGILOPAY_PUBLIC_KEY" : "",
-      !secretKey ? "SIGILOPAY_SECRET_KEY" : "",
-    ].filter(Boolean);
-    return send({ error: "Checkout configuration incomplete: " + missing.join(", ") }, 503);
+    // Keep the operational cause server-side; it reveals configuration state.
+    console.error("Sigilo Pay checkout is not configured");
+    return send({ error: "Checkout temporarily unavailable. Please try again later." }, 503);
   }
   try {
     const raw = await req.text();
