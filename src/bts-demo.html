@@ -132,8 +132,7 @@ async function goToPayment(){
   const raw=await response.text();let result={};try{result=JSON.parse(raw)}catch{}
   if(!response.ok){
    const detail=typeof result.error==='string'?result.error:'Checkout não disponível';
-   const gatewayDetail=typeof result.gateway_detail==='string'?' · '+result.gateway_detail:'';
-   throw new Error('Código '+response.status+': '+detail+gatewayDetail);
+   throw new Error('Código '+response.status+': '+detail);
   }
   const url=new URL(result.checkoutUrl);
   if(url.protocol!=='https:')throw new Error('Link de pagamento inválido.');
