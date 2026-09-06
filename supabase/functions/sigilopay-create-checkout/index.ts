@@ -3,6 +3,15 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 const endpoint = "https://app.sigilopay.com.br/api/v1/gateway/checkout";
 const dates: Record<string, string> = { "28": "2026-10-28", "30": "2026-10-30", "31": "2026-10-31" };
 
+async function requestActorHash(req: Request): Promise<string> {
+  // Hash only the request source used for throttling; do not persist or log its raw value.
+  const forwarded = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "";
+  const source = forwarded || "missing-ip";
+  const bytes = new TextEncoder().encode(source);
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
 Deno.serve(async (req: Request) => {
   const origin = Deno.env.get("CHECKOUT_ORIGIN");
   const headers: Record<string, string> = { "Cache-Control": "no-store", "Vary": "Origin" };
@@ -44,6 +53,13 @@ Deno.serve(async (req: Request) => {
     const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
+    const actorHash = await requestActorHash(req);
+    const { data: allowed, error: rateLimitError } = await db.rpc("consume_checkout_rate_limit", {
+      p_actor_hash: actorHash,
+    });
+    if (rateLimitError) return send({ error: "Checkout temporarily unavailable. Please try again later." }, 503);
+    if (!allowed) return send({ error: "Too many checkout attempts. Please wait 10 minutes and try again." }, 429);
+
     const { data: order, error: orderError } = await db.rpc("create_sigilopay_order", {
       p_date: eventDate, p_quantity: quantity, p_sector: sector, p_ticket_type: ticketType,
     }).single();
