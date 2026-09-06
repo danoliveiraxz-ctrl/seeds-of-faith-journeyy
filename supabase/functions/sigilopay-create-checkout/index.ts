@@ -16,10 +16,10 @@ Deno.serve(async (req: Request) => {
   if (req.method !== "POST") return send({ error: "Method not allowed" }, 405);
   if (!origin || req.headers.get("Origin") !== origin) return send({ error: "Origin not allowed" }, 403);
 
-  // The complete header value stays only in this server-side secret.
-  // The supplied documentation does not specify its authentication scheme.
-  const authorization = Deno.env.get("SIGILOPAY_AUTHORIZATION");
-  if (Deno.env.get("SIGILOPAY_ENABLED") !== "true" || !authorization) {
+  // Sigilo Pay requires both API credentials and they must never reach the browser.
+  const publicKey = Deno.env.get("SIGILOPAY_PUBLIC_KEY");
+  const secretKey = Deno.env.get("SIGILOPAY_SECRET_KEY");
+  if (Deno.env.get("SIGILOPAY_ENABLED") !== "true" || !publicKey || !secretKey) {
     return send({ error: "Checkout is not enabled" }, 503);
   }
   try {
@@ -68,7 +68,7 @@ Deno.serve(async (req: Request) => {
     };
     const gateway = await fetch(endpoint, {
       method: "POST", redirect: "error", signal: AbortSignal.timeout(15000),
-      headers: { "Authorization": authorization, "Content-Type": "application/json" },
+      headers: { "x-public-key": publicKey, "x-secret-key": secretKey, "Content-Type": "application/json" },
       body: JSON.stringify(checkoutBody),
     });
     if (!gateway.ok) throw new Error("Gateway rejected checkout");
