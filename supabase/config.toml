@@ -1,0 +1,6 @@
+[functions.panterapay-create]
+verify_jwt = false
+# panterapay-create verifies the Supabase user token through auth.getUser.
+[functions.panterapay-webhook]
+verify_jwt = false
+# External provider cannot present a Supabase JWT. Handler currently rejects all events.
