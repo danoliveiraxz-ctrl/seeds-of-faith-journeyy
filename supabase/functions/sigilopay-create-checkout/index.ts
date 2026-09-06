@@ -2,7 +2,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 
 const endpoint = "https://app.sigilopay.com.br/api/v1/gateway/checkout";
 const productImageUrl = "https://mknjyqsgxricieugaftg.supabase.co/storage/v1/object/public/assets/kpop-product.png";
-const dates: Record<string, string> = { "28": "2026-10-28", "30": "2026-10-30", "31": "2026-10-31" };
+const dates: Record<string, string> = { "28": "2026-10-28", "31": "2026-10-31" };
 
 async function requestActorHash(req: Request): Promise<string> {
   // Hash only the request source used for throttling; do not persist or log its raw value.
