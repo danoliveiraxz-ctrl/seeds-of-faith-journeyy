@@ -19,8 +19,14 @@ Deno.serve(async (req: Request) => {
   // Sigilo Pay requires both API credentials and they must never reach the browser.
   const publicKey = Deno.env.get("SIGILOPAY_PUBLIC_KEY");
   const secretKey = Deno.env.get("SIGILOPAY_SECRET_KEY");
-  if (Deno.env.get("SIGILOPAY_ENABLED") !== "true" || !publicKey || !secretKey) {
-    return send({ error: "Checkout is not enabled" }, 503);
+  const enabled = Deno.env.get("SIGILOPAY_ENABLED") === "true";
+  if (!enabled || !publicKey || !secretKey) {
+    const missing = [
+      !enabled ? "SIGILOPAY_ENABLED" : "",
+      !publicKey ? "SIGILOPAY_PUBLIC_KEY" : "",
+      !secretKey ? "SIGILOPAY_SECRET_KEY" : "",
+    ].filter(Boolean);
+    return send({ error: "Checkout configuration incomplete: " + missing.join(", ") }, 503);
   }
   try {
     const raw = await req.text();
