@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import demo from "../bts-demo.html?raw";
 export const Route = createFileRoute("/")({
-  head: () => ({ meta: [{ title: "Violet Tickets · BTS | Demonstração" }, { name: "description", content: "Demonstração interativa de ingressos BTS. Sem venda, emissão ou autenticação real." }] }),
-  component: () => <iframe title="Violet Tickets: demonstração de ingressos BTS" srcDoc={demo} sandbox="allow-scripts" style={{position:"fixed",inset:0,width:"100%",height:"100dvh",border:0,background:"#09060e",zIndex:50}} />,
+  head: () => ({ meta: [{ title: "Kpop Tickets · BTS World Tour Arirang" }, { name: "description", content: "Sessões, valores e atendimento da Kpop Tickets para BTS World Tour Arirang." }] }),
+  component: () => <iframe title="Kpop Tickets: BTS World Tour Arirang" srcDoc={demo} sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox" style={{position:"fixed",inset:0,width:"100%",height:"100dvh",border:0,background:"#f5f5f6",zIndex:50}} />,
 });
