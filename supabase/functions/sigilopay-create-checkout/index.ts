@@ -77,7 +77,14 @@ Deno.serve(async (req: Request) => {
       headers: { "x-public-key": publicKey, "x-secret-key": secretKey, "Content-Type": "application/json" },
       body: JSON.stringify(checkoutBody),
     });
-    if (!gateway.ok) return send({ error: "Sigilo Pay rejected the checkout (HTTP " + gateway.status + ")" }, 502);
+    if (!gateway.ok) {
+      // Temporary diagnostics approved by the operator. Remove after gateway validation succeeds.
+      const gatewayDetail = (await gateway.text()).replace(/[\r\n]+/g, " ").slice(0, 500);
+      return send({
+        error: "Sigilo Pay rejected the checkout (HTTP " + gateway.status + ")",
+        gateway_detail: gatewayDetail || "No details returned",
+      }, 502);
+    }
     const result = await gateway.json();
     if (!result || typeof result.productId !== "string" || typeof result.offerCode !== "string" || typeof result.checkoutUrl !== "string") return send({ error: "Sigilo Pay returned an invalid checkout response" }, 502);
     const checkoutUrl = new URL(result.checkoutUrl);
