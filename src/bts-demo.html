@@ -47,21 +47,29 @@ async function goToPayment(){
   if(!order||paying)return;
   paying=true;
   const button=$('finish'),status=$('checkoutStatus');
-  button.disabled=true;button.textContent='PREPARANDO CHECKOUT…';status.textContent='Aguarde um instante.';
-  const paymentWindow=window.open('about:blank','_blank');
+  button.disabled=true;button.textContent='ABRINDO PAGAMENTO…';status.textContent='Conectando ao pagamento seguro.';
+  const paymentWindow=window.open('','kpopTicketsCheckout');
+  if(paymentWindow){
+    paymentWindow.document.title='Kpop Tickets';
+    paymentWindow.document.body.innerHTML='<p style="font:16px Arial;padding:24px">Preparando pagamento seguro…</p>';
+  }
   try{
     const response=await fetch('https://mknjyqsgxricieugaftg.supabase.co/functions/v1/sigilopay-create-checkout',{
-      method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session:order.date,quantity:1})
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({session:order.date,quantity:1})
     });
-    const result=await response.json();
-    if(!response.ok||typeof result.checkoutUrl!=='string')throw new Error('Checkout indisponível');
-    if(paymentWindow)paymentWindow.location.replace(result.checkoutUrl);
-    else window.location.assign(result.checkoutUrl);
-    status.textContent='Checkout aberto em uma nova guia.';
+    const raw=await response.text();
+    let result={};try{result=JSON.parse(raw)}catch{}
+    if(!response.ok||typeof result.checkoutUrl!=='string'||!result.checkoutUrl.startsWith('https://'))throw new Error('checkout');
+    if(paymentWindow)paymentWindow.location.href=result.checkoutUrl;
+    else window.location.href=result.checkoutUrl;
+    button.textContent='PAGAMENTO ABERTO ✓';
+    status.textContent='O pagamento seguro foi aberto. Caso não apareça, permita pop-ups e tente novamente.';
   }catch{
-    if(paymentWindow)paymentWindow.close();
-    status.textContent='Não foi possível abrir o checkout agora. Tente novamente.';
-    button.disabled=false;button.textContent='IR PARA PAGAMENTO SEGURO →';paying=false;
+    if(paymentWindow&&!paymentWindow.closed)paymentWindow.close();
+    status.textContent='Não conseguimos iniciar o pagamento. Verifique sua conexão e tente novamente.';
+    button.disabled=false;button.textContent='TENTAR PAGAMENTO NOVAMENTE';paying=false;
   }
 }
 $('buy').addEventListener('click',buy);$('mobileBuy').addEventListener('click',buy);$('finish').addEventListener('click',goToPayment);$('back').addEventListener('click',home);['brand','footerBrand'].forEach(id=>$(id).addEventListener('click',e=>{e.preventDefault();home();}));
