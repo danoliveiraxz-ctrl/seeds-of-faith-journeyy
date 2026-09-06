@@ -51,7 +51,8 @@ Deno.serve(async (req: Request) => {
         name: "BTS World Tour Arirang - " + quantity + " ingresso" + (quantity === 1 ? "" : "s"),
         offer: {
           name: "Sessão " + body.session + " de outubro de 2026",
-          price: order.amount_cents,
+          // Sigilo Pay validates this field in BRL; the order remains stored in cents.
+          price: order.amount_cents / 100,
           offerType: "NATIONAL",
           currency: "BRL",
           lang: "pt-BR",
