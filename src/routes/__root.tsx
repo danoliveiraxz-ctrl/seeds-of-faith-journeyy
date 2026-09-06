@@ -78,10 +78,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Violet Tickets · BTS | Demonstração" },
+      { title: "Kpop Tickets · BTS World Tour Arirang" },
       {
         name: "description",
-        content: "Demonstração de ingressos BTS. Não realiza vendas nem emite ingressos.",
+        content: "Sessões, valores e atendimento da Kpop Tickets para BTS World Tour Arirang.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
