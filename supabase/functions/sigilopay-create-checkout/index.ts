@@ -43,7 +43,7 @@ Deno.serve(async (req: Request) => {
     const { data: order, error: orderError } = await db.rpc("create_sigilopay_order", {
       p_date: eventDate, p_quantity: quantity,
     }).single();
-    if (orderError || !order) return send({ error: "Unable to create order" }, 503);
+    if (orderError || !order) return send({ error: "Unable to create order in database" }, 503);
 
     const checkoutBody = {
       product: {
@@ -77,15 +77,15 @@ Deno.serve(async (req: Request) => {
       headers: { "x-public-key": publicKey, "x-secret-key": secretKey, "Content-Type": "application/json" },
       body: JSON.stringify(checkoutBody),
     });
-    if (!gateway.ok) throw new Error("Gateway rejected checkout");
+    if (!gateway.ok) return send({ error: "Sigilo Pay rejected the checkout (HTTP " + gateway.status + ")" }, 502);
     const result = await gateway.json();
-    if (!result || typeof result.productId !== "string" || typeof result.offerCode !== "string" || typeof result.checkoutUrl !== "string") throw new Error("Invalid gateway response");
+    if (!result || typeof result.productId !== "string" || typeof result.offerCode !== "string" || typeof result.checkoutUrl !== "string") return send({ error: "Sigilo Pay returned an invalid checkout response" }, 502);
     const checkoutUrl = new URL(result.checkoutUrl);
     if (checkoutUrl.protocol !== "https:") throw new Error("Invalid checkout URL");
     const { error: updateError } = await db.from("checkout_orders").update({
       gateway_product_id: result.productId, gateway_offer_code: result.offerCode, checkout_url: checkoutUrl.toString(),
     }).eq("id", order.id);
-    if (updateError) throw new Error("Could not persist checkout");
+    if (updateError) return send({ error: "Unable to save checkout in database" }, 503);
     return send({ checkoutUrl: checkoutUrl.toString() });
   } catch {
     return send({ error: "Unable to create checkout. Please try again later." }, 503);
