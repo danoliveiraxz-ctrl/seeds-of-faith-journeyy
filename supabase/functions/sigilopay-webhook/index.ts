@@ -67,8 +67,21 @@ Deno.serve(async (req: Request) => {
     if (!payload) return Response.json({ error: "Invalid payload" }, { status: 400 });
     const externalId = payload.orderItems![0].product.externalId;
     const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false, autoRefreshToken: false } });
-    const { data: order, error: orderError } = await db.from("checkout_orders").select("id").eq("external_id", externalId).maybeSingle();
+    const { data: order, error: orderError } = await db
+      .from("checkout_orders")
+      .select("id, gateway_offer_code, amount_cents")
+      .eq("external_id", externalId)
+      .maybeSingle();
     if (orderError) return Response.json({ error: "Unable to process event" }, { status: 503 });
+
+    // A valid webhook must match the checkout we created. TRANSACTION_CREATED is
+    // recorded only; it never marks an order paid or issues a ticket.
+    if (!order || order.gateway_offer_code !== payload.offerCode ||
+      payload.transaction.currency !== "BRL" ||
+      payload.transaction.amount !== order.amount_cents / 100) {
+      return Response.json({ error: "Invalid transaction reference" }, { status: 400 });
+    }
+
     const { error: insertError } = await db.from("sigilopay_transactions").upsert({
       transaction_id: payload.transaction.id,
       order_id: order?.id ?? null,
